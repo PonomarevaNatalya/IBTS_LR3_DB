@@ -93,3 +93,50 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TForm1::VirtualStringTree1GetText(TBaseVirtualTree *Sender, PVirtualNode Node,
+          TColumnIndex Column, TVSTTextType TextType, UnicodeString &CellText)
+
+{
+if(Node == NULL) return;
+	  Struct *nodeData = (Struct*) VirtualStringTree1->GetNodeData(Node);
+
+	  switch (Column) {
+	  case 0:
+	  {
+		  CellText = (UnicodeString)nodeData->id;
+		  break;
+	  }
+	  case 1:
+	  {
+		  CellText = nodeData->origin;
+		  break;
+	  }
+
+	  }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Button2Click(TObject *Sender)
+{
+ VirtualStringTree1->Clear();
+ Label1->Caption="";
+ Label2->Caption="";
+ Label3->Caption="";
+}
+//---------------------------------------------------------------------------
+
+
+
+void __fastcall TForm1::VirtualStringTree1AddToSelection(TBaseVirtualTree *Sender,
+          PVirtualNode Node)
+{
+if(Node == NULL) return;
+
+		Struct *nodeData = (Struct*) VirtualStringTree1->GetNodeData(Node);
+		Label1->Caption=nodeData->name;
+		Label2->Caption=nodeData->description;
+		Label3->Caption=nodeData->estimated_size;
+}
+//---------------------------------------------------------------------------
+
+
