@@ -1,0 +1,6 @@
+*.local
+*.obj
+*/Win32/
+*.groupproj
+*/__history/
+*/*.lib
