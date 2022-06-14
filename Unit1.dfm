@@ -2,61 +2,79 @@ object Form1: TForm1
   Left = 0
   Top = 0
   Caption = 'Form1'
-  ClientHeight = 484
-  ClientWidth = 822
+  ClientHeight = 357
+  ClientWidth = 600
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -12
-  Font.Name = 'Segoe UI'
+  Font.Name = 'Times New Roman'
   Font.Style = []
+  OldCreateOrder = True
+  PixelsPerInch = 96
   TextHeight = 15
   object Label1: TLabel
-    Left = 336
-    Top = 16
-    Width = 113
+    Left = 389
+    Top = 32
+    Width = 44
     Height = 15
+    Color = clBtnFace
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
   end
   object Label2: TLabel
-    Left = 336
-    Top = 88
-    Width = 113
-    Height = 17
-  end
-  object Label3: TLabel
-    Left = 336
-    Top = 160
-    Width = 113
-    Height = 17
+    Left = 396
+    Top = 152
+    Width = 75
+    Height = 15
   end
   object Label4: TLabel
-    Left = 352
-    Top = 53
-    Width = 24
-    Height = 15
-    Caption = #1048#1084#1103
+    Left = 424
+    Top = 69
+    Width = 50
+    Height = 19
+    Caption = 'url_hash'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
   end
   object Label5: TLabel
-    Left = 352
-    Top = 125
-    Width = 55
-    Height = 15
-    Caption = #1054#1087#1080#1089#1072#1085#1080#1077
-  end
-  object Label6: TLabel
-    Left = 352
-    Top = 200
-    Width = 40
-    Height = 15
-    Caption = #1056#1072#1079#1084#1077#1088
+    Left = 416
+    Top = 189
+    Width = 69
+    Height = 19
+    Caption = 'last_update'
+    Color = clBtnFace
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
   end
   object VirtualStringTree1: TVirtualStringTree
-    Left = 8
+    Left = 24
     Top = 16
-    Width = 265
+    Width = 359
     Height = 268
+    DefaultNodeHeight = 21
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
+    Font.Style = []
     Header.AutoSizeIndex = 0
     Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
+    ParentFont = False
     TabOrder = 0
     OnAddToSelection = VirtualStringTree1AddToSelection
     OnGetText = VirtualStringTree1GetText
@@ -65,13 +83,18 @@ object Form1: TForm1
     Columns = <
       item
         Position = 0
-        Text = #1048#1085#1076#1077#1082#1089
-        Width = 68
+        Text = 'top_level_hostname'
+        Width = 117
       end
       item
         Position = 1
-        Text = #1048#1084#1103
-        Width = 189
+        Text = 'resource_hostname'
+        Width = 123
+      end
+      item
+        Position = 2
+        Text = 'resource_type'
+        Width = 103
       end>
   end
   object Button1: TButton
@@ -80,6 +103,12 @@ object Form1: TForm1
     Width = 75
     Height = 25
     Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 1
     OnClick = Button1Click
   end
@@ -89,6 +118,12 @@ object Form1: TForm1
     Width = 75
     Height = 25
     Caption = #1054#1095#1080#1089#1090#1080#1090#1100
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 2
     OnClick = Button2Click
   end
@@ -97,15 +132,29 @@ object Form1: TForm1
     Top = 290
     Width = 75
     Height = 25
-    Caption = 'Button3'
+    Caption = #1059#1076#1072#1083#1080#1090#1100
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 3
+    OnClick = Button3Click
   end
   object Button4: TButton
     Left = 440
     Top = 290
     Width = 75
     Height = 25
-    Caption = 'Button4'
+    Caption = #1057#1085#1077#1089#1090#1080' '#1074#1089#1077
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 4
+    OnClick = Button4Click
   end
 end

@@ -19,15 +19,15 @@ __published:	// IDE-managed Components
 	TButton *Button3;
 	TButton *Button4;
 	TLabel *Label2;
-	TLabel *Label3;
 	TLabel *Label4;
 	TLabel *Label5;
-	TLabel *Label6;
 	void __fastcall Button1Click(TObject *Sender);
 	void __fastcall VirtualStringTree1GetText(TBaseVirtualTree *Sender, PVirtualNode Node,
-          TColumnIndex Column, TVSTTextType TextType, UnicodeString &CellText);
+		  TColumnIndex Column, TVSTTextType TextType, UnicodeString &CellText); //
 	void __fastcall Button2Click(TObject *Sender);
 	void __fastcall VirtualStringTree1AddToSelection(TBaseVirtualTree *Sender, PVirtualNode Node);
+	void __fastcall Button3Click(TObject *Sender);
+	void __fastcall Button4Click(TObject *Sender);
 
 
 private:	// User declarations
@@ -39,11 +39,11 @@ extern PACKAGE TForm1 *Form1;
 //---------------------------------------------------------------------------
 typedef struct{
 
-	int id;
-	UnicodeString   origin;
-	UnicodeString   name;
-	UnicodeString   description;
-	int estimated_size;
+	UnicodeString   top_level_hostname;
+	UnicodeString   resource_hostname;
+	UnicodeString   resource_url_hash;
+	int resource_type;
+	UnicodeString last_update;
 } Struct;
 //---------------------------------------------------------------------------
 #endif

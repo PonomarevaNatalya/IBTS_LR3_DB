@@ -14,7 +14,7 @@ TForm1 *Form1;
 __fastcall TForm1::TForm1(TComponent* Owner)
 	: TForm(Owner)
 {
-VirtualStringTree1->NodeDataSize =sizeof(Struct);
+VirtualStringTree1->NodeDataSize =sizeof(Struct);  // задаем размер-структуру
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::Button1Click(TObject *Sender)
@@ -22,70 +22,37 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
    VirtualStringTree1->Clear();
    VirtualStringTree1->BeginUpdate();
 
-		 char* filename = "Databases.db";
-		 AnsiString str="Select * from databases ;";
+		 char* filename = "load_statistics.db";
+		 AnsiString str="Select * from load_statistics ;";
 		 sqlite3 *datab;
 		 sqlite3_stmt *pStmt;
+		 //const char *errmsg;
 
-		 if ( sqlite3_open(filename,&datab))
+		if (sqlite3_open(filename,&datab))
 			{
 		ShowMessage("Can't open database: " + (String)sqlite3_errmsg(datab));
 		sqlite3_close(datab);
-        return;
+		return;
 			}
-
 		if (sqlite3_prepare_v2(datab, str.c_str(), -1, &pStmt, NULL))
 		{
 			sqlite3_finalize(pStmt);
 			sqlite3_close(datab);
 		}
 
-		while (true)
+		while (sqlite3_step(pStmt) == SQLITE_ROW)
 		{
-			int resault = (sqlite3_step(pStmt));
-			if (resault != SQLITE_ROW) {
-			   break;
-			}
 			PVirtualNode entryNode = VirtualStringTree1->AddChild(VirtualStringTree1->RootNode);
 			Struct *nodeData = (Struct*) VirtualStringTree1->GetNodeData(entryNode);
-			int col = sqlite3_data_count(pStmt);
 
-			for(int k=0; k<col; k++)
-			{
-			AnsiString otwet;
-			otwet.printf("%s",sqlite3_column_text(pStmt, k));
-				  switch (k) {
-					case 0:
-					  {
-						  nodeData->id =otwet.ToInt();;
-						  break;
-					  }
-					case 1:
-					  {
-						  nodeData->origin = UnicodeString(otwet);
-						  break;
-					  }
-					case 2:
-					  {
-						  nodeData->name=  UnicodeString(otwet);
-						  break;
-					  }
-					case 3:
-					  {
-						  nodeData->description= UnicodeString(otwet);
-						  break;
-					  }
-					case 4:
-					  {
-						  nodeData->estimated_size=otwet.ToInt();
-						  break;
-					  }
+			nodeData->top_level_hostname =(char *)sqlite3_column_text(pStmt, 0);
+			nodeData->resource_hostname =(char *)sqlite3_column_text(pStmt, 1);
+			nodeData->resource_url_hash=(char *)sqlite3_column_text(pStmt, 2);
+			nodeData->resource_type=StrToInt((char *)sqlite3_column_text(pStmt, 3));
+			nodeData->last_update=(char *)sqlite3_column_text(pStmt, 4);
+		 }
 
-				  }
 
-			}
-
-		}
 
 	sqlite3_finalize(pStmt);
 	sqlite3_close(datab);
@@ -94,25 +61,30 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
 //---------------------------------------------------------------------------
 
 void __fastcall TForm1::VirtualStringTree1GetText(TBaseVirtualTree *Sender, PVirtualNode Node,
-          TColumnIndex Column, TVSTTextType TextType, UnicodeString &CellText)
+		  TColumnIndex Column, TVSTTextType TextType, UnicodeString &CellText)
 
 {
 if(Node == NULL) return;
-	  Struct *nodeData = (Struct*) VirtualStringTree1->GetNodeData(Node);
+	  Struct *nodeData = (Struct*) VirtualStringTree1->GetNodeData(Node);  // было в лекции, преобразует в норм текст
 
 	  switch (Column) {
 	  case 0:
 	  {
-		  CellText = (UnicodeString)nodeData->id;
+		  CellText =nodeData->top_level_hostname;
 		  break;
 	  }
 	  case 1:
 	  {
-		  CellText = nodeData->origin;
+		  CellText =nodeData->resource_hostname;
+		  break;
+	  }
+	  case 2:
+	  {
+		  CellText = nodeData->resource_type;
 		  break;
 	  }
 
-	  }
+	 }
 }
 //---------------------------------------------------------------------------
 
@@ -121,22 +93,98 @@ void __fastcall TForm1::Button2Click(TObject *Sender)
  VirtualStringTree1->Clear();
  Label1->Caption="";
  Label2->Caption="";
- Label3->Caption="";
-}
+ }
 //---------------------------------------------------------------------------
 
 
 
 void __fastcall TForm1::VirtualStringTree1AddToSelection(TBaseVirtualTree *Sender,
-          PVirtualNode Node)
+		  PVirtualNode Node)
 {
 if(Node == NULL) return;
 
 		Struct *nodeData = (Struct*) VirtualStringTree1->GetNodeData(Node);
-		Label1->Caption=nodeData->name;
-		Label2->Caption=nodeData->description;
-		Label3->Caption=nodeData->estimated_size;
+		Label1->Caption=nodeData->resource_url_hash;
+		Label2->Caption=nodeData->last_update;
 }
 //---------------------------------------------------------------------------
 
+
+void __fastcall TForm1::Button3Click(TObject *Sender)
+{
+ sqlite3* datab;
+   char* filename="load_statistics.db";
+   PVirtualNode choiseStr=VirtualStringTree1->GetFirstSelected(); // берем то, что выделено
+   if(choiseStr==NULL) return;
+
+Struct *nodeData=(Struct*)VirtualStringTree1->GetNodeData(choiseStr);
+AnsiString str="Delete from load_statistics where last_update = "+nodeData->last_update+" ;";
+
+   sqlite3_stmt *pStmt;
+   char* errmsg;
+
+if(sqlite3_open( filename,&datab ))
+{
+	sqlite3_close(datab);
+}
+
+int result=sqlite3_prepare_v2(datab,str.c_str(),-1,&pStmt,NULL);
+if(result!=SQLITE_OK)
+{
+	errmsg=(char*)sqlite3_errmsg(datab);
+	sqlite3_close(datab);
+	return;
+}
+
+result=sqlite3_step(pStmt);
+if(result!=SQLITE_DONE)
+{
+	sqlite3_finalize(pStmt);
+	sqlite3_close(datab);
+	return;
+}
+sqlite3_finalize(pStmt);
+sqlite3_close(datab);
+Button1Click(Sender);
+Label1->Caption="";
+Label2->Caption="";
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Button4Click(TObject *Sender)
+{
+    sqlite3* datab;
+   char* filename="load_statistics.db";
+   AnsiString str="Delete from load_statistics ;";
+   sqlite3_stmt *pStmt;
+   char* errmsg;
+
+if(sqlite3_open( filename,&datab ))
+{
+	sqlite3_close(datab);
+}
+
+int result=sqlite3_prepare_v2(datab,str.c_str(),-1,&pStmt,NULL);
+if(result!=SQLITE_OK)
+{
+	errmsg=(char*)sqlite3_errmsg(datab);
+	sqlite3_close(datab);
+	return;
+}
+
+result=sqlite3_step(pStmt);
+if(result!=SQLITE_DONE)
+{
+	sqlite3_finalize(pStmt);
+	sqlite3_close(datab);
+	return;
+}
+	sqlite3_finalize(pStmt);
+	sqlite3_close(datab);
+	Button1Click(Sender);
+	Label1->Caption="";
+	Label2->Caption="";
+}
+//---------------------------------------------------------------------------
 
